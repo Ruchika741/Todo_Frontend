@@ -8,6 +8,8 @@ class App extends React.Component {
       todoList: [],
       activeItem: {
         id: null,
+        choices: '',
+        category: '',
         title: '',
         complete: false,
       },
@@ -21,6 +23,8 @@ class App extends React.Component {
     this.startEdit = this.startEdit.bind(this)
     this.deleteItem = this.deleteItem.bind(this)
     this.strikeUnstrike = this.strikeUnstrike.bind(this)
+    this.changeDropdown = this.changeDropdown.bind(this)
+    this.handleChangeCategory = this.handleChangeCategory.bind(this)
   };
 
   getCookie(name) {
@@ -52,12 +56,27 @@ class App extends React.Component {
   handleChange(e) {
     let name = e.target.name
     let value = e.target.value
+
     console.log("Name:", name)
     console.log("Value:", value)
     this.setState({
       activeItem: {
         ...this.state.activeItem,
         title: value
+      }
+    })
+  }
+
+  handleChangeCategory(e) {
+    let name = e.target.name
+    let value = e.target.value
+
+    console.log("Name:", name)
+    console.log("Value:", value)
+    this.setState({
+      activeItem: {
+        ...this.state.activeItem,
+        category: value
       }
     })
   }
@@ -89,6 +108,7 @@ class App extends React.Component {
         this.setState({
           activeItem: {
             id: null,
+            category: '',
             title: '',
             complete: false,
           }
@@ -132,13 +152,18 @@ class App extends React.Component {
         'Content-type': 'application/json',
         'X-CSRFToken': csrftoken,
       },
-      body: JSON.stringify({ 'complete': task.complete, 'title': task.title })
+      body: JSON.stringify({ 'complete': task.complete, 'title': task.title, 'category': task.category })
     }).then(() => {
       this.fetchTasks()
     })
 
     console.log('TASK:', task.complete)
   }
+
+  changeDropdown = e => {
+    this.setState({ value: e.target.value });
+  }
+
   render() {
     let tasks = this.state.todoList
     let self = this
@@ -150,6 +175,11 @@ class App extends React.Component {
               <div className="flex-wrapper">
                 <div style={{ flex: 6 }}>
                   <input onChange={this.handleChange} className="form-control" id="title" value={this.state.activeItem.title} type="text" name="title" placeholder="Add task" />
+                  <input onChange={this.handleChangeCategory} className="form-control" id="category" value={this.state.activeItem.category} type="text" name="category" placeholder="Select Category" />
+                  {/* <input onChange={this.handleChange} className="form-control" id="category" value={this.state.activeItem.category} type="dropdown" name="category" placeholder="Add Category" /> */}
+                  <select id="options" value={this.state.activeItem.category} onChange={this.changeDropdown}>
+                    <option value={this.value} defaultValue>{this.value}</option>
+                  </select>
                 </div>
                 <div style={{ flex: 1 }}>
                   <input className="btn btn-warning" id="submit" type="submit" name="Add" />
@@ -167,14 +197,24 @@ class App extends React.Component {
 
                     {console.log('strike', +task.complete)}
                     {task.complete === false ? (
-                      <span>{task.title}</span>
+                      <div>
+                        <span>{task.title}</span>
+                        {/* <span>{task.category}</span> */}
+                      </div>
 
                     ) : (
-
-                        <strike>{task.title}</strike>
+                        <div>
+                          <strike>{task.title}</strike>
+                          {/* <span>{task.category}</span> */}
+                        </div>
                       )}
 
                   </div>
+
+                  <div style={{ flex: 2 }}>
+                    <span>{task.category}</span>
+                  </div>
+
                   <div style={{ flex: 1 }}>
                     <button onClick={() => self.startEdit(task)} className="btn btn-sm btn-outline-info">Edit</button>
                   </div>
