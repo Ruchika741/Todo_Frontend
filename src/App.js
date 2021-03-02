@@ -6,9 +6,9 @@ class App extends React.Component {
     super(props);
     this.state = {
       todoList: [],
+      choices: ['Optional', 'Important', 'Weekly update'],
       activeItem: {
         id: null,
-        choices: '',
         category: '',
         title: '',
         complete: false,
@@ -175,11 +175,15 @@ class App extends React.Component {
               <div className="flex-wrapper">
                 <div style={{ flex: 6 }}>
                   <input onChange={this.handleChange} className="form-control" id="title" value={this.state.activeItem.title} type="text" name="title" placeholder="Add task" />
-                  <input onChange={this.handleChangeCategory} className="form-control" id="category" value={this.state.activeItem.category} type="text" name="category" placeholder="Select Category" />
-                  {/* <input onChange={this.handleChange} className="form-control" id="category" value={this.state.activeItem.category} type="dropdown" name="category" placeholder="Add Category" /> */}
-                  <select id="options" value={this.state.activeItem.category} onChange={this.changeDropdown}>
-                    <option value={this.value} defaultValue>{this.value}</option>
+                  {/* <input onChange={this.handleChangeCategory} className="form-control" id="category" value={this.state.activeItem.category} type="text" name="category" placeholder="Select Category" /> */}
+                  <select onChange={this.handleChangeCategory} id="category" value={this.state.activeItem.category} name="category">
+                    <option>Select a category</option>
+                    <option>Optional</option>
+                    <option>Important</option>
+                    <option>Weekly update</option>
+                    <option>Daily update</option>
                   </select>
+
                 </div>
                 <div style={{ flex: 1 }}>
                   <input className="btn btn-warning" id="submit" type="submit" name="Add" />
